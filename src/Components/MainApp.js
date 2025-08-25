@@ -13,10 +13,12 @@ import RegisterPage from "../Components/UserLogin/RegisterUser";
 // Layout with Navbar + Footer
 function AppLayout() {
   return (
-    <>
+   <>
       <Navbar />
       <div style={{ marginTop: "4px", marginBottom: "24px" }}>
-        <Outlet />
+        <Suspense fallback={<div>Loading content...</div>}>
+          <Outlet />
+        </Suspense>
       </div>
       <Footer />
     </>
@@ -44,7 +46,6 @@ export default function MainApp() {
 
   return (
     <Router>
-      <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           {/* Public layout (no navbar/footer) */}
           <Route element={<PublicLayout />}>
@@ -68,7 +69,6 @@ export default function MainApp() {
               ))}
           </Route>
         </Routes>
-      </Suspense>
     </Router>
   );
 }
