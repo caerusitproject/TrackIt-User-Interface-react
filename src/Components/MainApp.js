@@ -6,7 +6,9 @@ import { routes } from "./RoutesConfig";
 
 import Navbar from "../Components/HomePage/Navbar";
 import Footer from "../Components/HomePage/Footer";
-import Login from "../Components/UserLogin/LoginPage"
+import Login from "../Components/UserLogin/LoginPage";
+import PasswordReset from "../Components/UserLogin/PasswordReset";
+import RegisterPage from "../Components/UserLogin/RegisterUser";
 
 // Layout with Navbar + Footer
 function AppLayout() {
@@ -47,12 +49,14 @@ export default function MainApp() {
           {/* Public layout (no navbar/footer) */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Login/>} />
+            <Route path="/password_reset" element={<PasswordReset/>} />
+            <Route path="/register-user" element={<RegisterPage/>} />
           </Route>
 
           {/* App layout (with navbar/footer) */}
           <Route element={<AppLayout />}>
             {routes
-              .filter((r) => r.path !== "/") // exclude login
+              .filter((r) => r.path !== "/" && r.path !== "/password_reset" && r.path !== "/register-user") // exclude login + pwd reset + sign_up
               .map(({ path, element, index, ...rest }) => (
                 <Route
                   key={path || "index"}
