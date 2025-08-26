@@ -6,15 +6,21 @@ import { routes } from "./RoutesConfig";
 
 import Navbar from "../Components/HomePage/Navbar";
 import Footer from "../Components/HomePage/Footer";
-import Login from "../Components/UserLogin/LoginPage"
+import Login from "../Components/UserLogin/LoginPage";
+import PasswordReset from "../Components/UserLogin/PasswordReset";
+import RegisterPage from "../Components/UserLogin/RegisterUser";
+import GlobalLoader from "./GlobalLoader";
 
 // Layout with Navbar + Footer
 function AppLayout() {
   return (
-    <>
+   <>
       <Navbar />
       <div style={{ marginTop: "4px", marginBottom: "24px" }}>
-        <Outlet />
+        <Suspense fallback={<div>Loading content...</div>}>
+          <GlobalLoader/>
+          <Outlet />
+        </Suspense>
       </div>
       <Footer />
     </>
@@ -42,18 +48,20 @@ export default function MainApp() {
 
   return (
     <Router>
-      <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           {/* Public layout (no navbar/footer) */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Login/>} />
+            <Route path="/password_reset" element={<PasswordReset/>} />
+            <Route path="/register-user" element={<RegisterPage/>} />
           </Route>
 
           {/* App layout (with navbar/footer) */}
           <Route element={<AppLayout />}>
             {routes
-              .filter((r) => r.path !== "/") // exclude login
+              .filter((r) => r.path !== "/" && r.path !== "/password_reset" && r.path !== "/register-user") // exclude login + pwd reset + sign_up
               .map(({ path, element, index, ...rest }) => (
+                <>
                 <Route
                   key={path || "index"}
                   path={path}
@@ -61,10 +69,11 @@ export default function MainApp() {
                   element={element}
                   {...rest}
                 />
+                
+                </>
               ))}
           </Route>
         </Routes>
-      </Suspense>
     </Router>
   );
 }

@@ -1,5 +1,3 @@
-import React from 'react'
-import Navbar from '../HomePage/Navbar'
 import MyTaskAddition from './MyTaskAddition'
 import RequestsTable from "./RequestsTable"
 import styled from 'styled-components'
@@ -22,14 +20,10 @@ const ContentWrapper = styled.div`
 export default function Request() {
   return (
     <div>
-      {/* <Navbar/> */}
       <ContentWrapper>
         <MyTaskAddition/>
         <RequestsTable/>
       </ContentWrapper>
-      {/* <div style={{display:"flex",justifyContent:"center",alignItems:"center", gap:"20px"}}> */}
-
-      {/* </div> */}
     </div>
   )
 }

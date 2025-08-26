@@ -14,7 +14,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { IconButton } from "@mui/material";
+import { IconButton,Paper } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -28,6 +28,10 @@ import styled from "styled-components";
 const CollapsiblePanel = styled(TasksPanel)`
   transition: width 0.3s ease;
   overflow: hidden;
+  transition: transform 0.3s ease;
+   &:hover {
+    transform: scale(1.01);
+  }
   ${({ collapsed }) =>
     collapsed
       ? `
@@ -49,6 +53,10 @@ export default function MyAllTasks() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
+     <Paper 
+      elevation={3} 
+      sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+    >
     <CollapsiblePanel collapsed={collapsed}>
       <TasksHeader>
         {!collapsed && "My All Tasks"}
@@ -67,7 +75,7 @@ export default function MyAllTasks() {
               </IconButton>
             </>
           )}
-           <CollapseButton
+          <CollapseButton
             onClick={() => setCollapsed((prev) => !prev)}
             collapsed={collapsed ? 1 : 0}
           >
@@ -140,5 +148,6 @@ export default function MyAllTasks() {
         </>
       )}
     </CollapsiblePanel>
+    </Paper>
   );
 }
