@@ -9,6 +9,7 @@ import Footer from "../Components/HomePage/Footer";
 import Login from "../Components/UserLogin/LoginPage";
 import PasswordReset from "../Components/UserLogin/PasswordReset";
 import RegisterPage from "../Components/UserLogin/RegisterUser";
+import GlobalLoader from "./GlobalLoader";
 
 // Layout with Navbar + Footer
 function AppLayout() {
@@ -17,6 +18,7 @@ function AppLayout() {
       <Navbar />
       <div style={{ marginTop: "4px", marginBottom: "24px" }}>
         <Suspense fallback={<div>Loading content...</div>}>
+          <GlobalLoader/>
           <Outlet />
         </Suspense>
       </div>
@@ -59,6 +61,7 @@ export default function MainApp() {
             {routes
               .filter((r) => r.path !== "/" && r.path !== "/password_reset" && r.path !== "/register-user") // exclude login + pwd reset + sign_up
               .map(({ path, element, index, ...rest }) => (
+                <>
                 <Route
                   key={path || "index"}
                   path={path}
@@ -66,6 +69,8 @@ export default function MainApp() {
                   element={element}
                   {...rest}
                 />
+                
+                </>
               ))}
           </Route>
         </Routes>

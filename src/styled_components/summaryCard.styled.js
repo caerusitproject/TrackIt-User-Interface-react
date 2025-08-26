@@ -6,6 +6,10 @@ export const Card = styled.div`
   background: #fff;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease;
+   &:hover {
+    transform: scale(1.02);
+  }
 `;
 
 export const SummaryTitle = styled.div`

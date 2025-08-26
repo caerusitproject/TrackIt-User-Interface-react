@@ -68,7 +68,9 @@ export default function Navbar() {
               top: 0,
               bottom: 0,
               background: "white",
-              borderRadius: "6px",
+              borderRadius: "10px",
+              padding:"5px",
+              height:"27px",
               transition: "all 0.3s ease",
               ...highlightStyle,
             }}
@@ -83,8 +85,9 @@ export default function Navbar() {
                 ref={(el) => (navRefs.current[item] = el)}
                 style={{
                   position: "relative",
-                  padding: "6px 12px",
+                  padding: "6px 14px",
                   borderRadius: "6px",
+                  textAlign:"center",
                   color: isActive ? "#D95D2E" : "rgba(255,255,255,0.8)",
                   fontWeight: isActive ? "bold" : "normal",
                   textDecoration: "none",

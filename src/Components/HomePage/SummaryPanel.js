@@ -6,9 +6,18 @@ import {
   CardBody,
   SummaryItem
 } from "../../styled_components/summaryCard.styled"
+import { Paper } from "@mui/material";
 // import { TextCenter } from "../../styled_components/login.styled"
 export default function SummaryPanel() {
   return (
+     <Paper
+      elevation={3} // 🔥 Material shadow depth (0–24)
+      sx={{
+        borderRadius: "1.3rem",
+        marginTop: 2,
+        backgroundColor: "#fff",
+      }}
+    >
     <Card>
       <SummaryTitle>
         <SummaryIcon />
@@ -37,5 +46,6 @@ export default function SummaryPanel() {
       </CardBody>
 
     </Card>
+    </Paper>
   );
 }
