@@ -20,6 +20,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import {DialogueTheme,ColorButton,ColorButtonCancel} from "../../styled_components/resuablecontainer.styled"
 import { IconButton } from '@mui/material';
+import moment from 'moment';
+import dayjs from "dayjs";
+
 
 
 
@@ -29,15 +32,27 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function FilterDialogue({open,setOpen,checked,setChecked}) {
   const [loading, setLoading] = React.useState(false);
+  const [dropDate, setDropDate] = React.useState({
+    attributes:'',
+  })
+  const [startDate, setStartDate] = React.useState(null);
+  const [endDate, setEndDate] = React.useState(null);
   
   const handleClose = () => {
+     setStartDate(null)
+     setEndDate(null)
      setOpen(false);
   };
 
   const handleApply = ()=>{
+    setStartDate(null)
+    setEndDate(null)
     setLoading(true);
     setOpen(false);
   }
+  console.log('dates and attributes__',dropDate,
+startDate ? dayjs(startDate).format("YYYY-MM-DD"):'',
+endDate ? dayjs(endDate).format("YYYY-MM-DD"):'')
 
   return (
       <DialogueTheme
@@ -74,16 +89,22 @@ export default function FilterDialogue({open,setOpen,checked,setChecked}) {
                     <Select
                       labelId="age-label"
                       id="age-select"
-                      label="Age"
+                      label="Attributes"
+                      value={dropDate.attributes}
+                      onChange={(e)=>{
+                        setDropDate({...dropDate,attributes:e.target.value})
+                      }}
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           height: "56px", // standard height
                         },
                       }}
                     >
-                      <MenuItem value={10}>Ten</MenuItem>
-                      <MenuItem value={20}>Twenty</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
+                      <MenuItem value={10}>Approval Status</MenuItem>
+                      <MenuItem value={20}>Assets</MenuItem>
+                      <MenuItem value={30}>Assigned Date</MenuItem>
+                      <MenuItem value={40}>Cancellation Requested</MenuItem>
+                      <MenuItem value={50}>Category</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>
@@ -101,6 +122,10 @@ export default function FilterDialogue({open,setOpen,checked,setChecked}) {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Start Date"
+                      value={startDate}
+                      onChange={(newValue)=>{
+                        setStartDate(newValue)
+                      }}
                       slotProps={{
                         textField: {
                           fullWidth: true,
@@ -121,6 +146,10 @@ export default function FilterDialogue({open,setOpen,checked,setChecked}) {
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="End Date"
+                      value={endDate}
+                      onChange={(newValue)=>{
+                        setEndDate(newValue)
+                      }}
                       slotProps={{
                         textField: {
                           fullWidth: true,
@@ -142,8 +171,10 @@ export default function FilterDialogue({open,setOpen,checked,setChecked}) {
         <DialogActions>
           <ColorButtonCancel onClick={handleClose}>Cancel</ColorButtonCancel>
           <ColorButton 
+          // style={{cursor: diabled == true ? "not-allowed":''}}
           loading={loading}
           loadingPosition="start" 
+          disabled={false}
           onClick={handleApply}>Apply Filter</ColorButton>
         </DialogActions>
     
