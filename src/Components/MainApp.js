@@ -17,7 +17,7 @@ function AppLayout() {
    <>
       <Navbar />
       <div style={{ marginTop: "4px", marginBottom: "24px" }}>
-        <Suspense fallback={<div>Loading content...</div>}>
+        <Suspense fallback={<div>Loading content...   </div>}>
           <GlobalLoader/>
           <Outlet />
         </Suspense>
