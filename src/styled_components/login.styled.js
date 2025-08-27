@@ -8,16 +8,57 @@ const breakpoints = {
   laptop: '1024px'
 };
 
-export const LoginPageBg = styled.div`
-  background: #fafbfc;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
+// export const LoginPageBg = styled.div`
+//   background: #fafbfc;
+//   min-height: 100vh;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   padding: 1rem;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 0.5rem;
+//   @media (max-width: ${breakpoints.mobile}) {
+//     padding: 0.5rem;
+//   }
+// `;
+
+export const LoginPageBg = styled.div`
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Default (desktop) background */
+  background: url("/images/orange5.jpg") no-repeat center center fixed;
+  background-size: cover;
+
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+    z-index: 0;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    background: url("/images/orange5.jpg") no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    background: url("/images/orange5.jpg") no-repeat center center fixed;
+    background-size: cover;
   }
 `;
 
@@ -55,10 +96,15 @@ export const LoginCard = styled.div`
   max-width: 370px;
   width: 100%;
   margin-top: 50px;
-  border: 1.5px solid #e3e3e3;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
   border-radius: 9px;
-  background: #fff;
-  box-shadow: 0 5px 26px #c8d3e033;
+
+  /* Semi-transparent background for glass effect */
+  background: rgba(255, 255, 255, 0.48);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+
+  box-shadow: 0 5px 26px rgba(0, 0, 0, 0.2);
   padding: 36px 32px 32px 32px;
 
   @media (max-width: ${breakpoints.mobile}) {
@@ -71,6 +117,7 @@ export const LoginCard = styled.div`
     max-width: 420px;
   }
 `;
+
 
 export const LoginAppTitle = styled.div`
   font-size: 1.45rem;
@@ -148,13 +195,13 @@ export const DividerOr = styled.div`
     right: 0;
     top: 50%;
     height: 1.2px;
-    background: #e3e3e3;
+    background: #383636ff;
     z-index: 0;
   }
 
   span {
-    background: #fff;
-    color: #777;
+    background: #8d8989ff;
+    color: #e7e5e5ff;
     padding: 0 18px;
     font-size: 0.98em;
     position: relative;

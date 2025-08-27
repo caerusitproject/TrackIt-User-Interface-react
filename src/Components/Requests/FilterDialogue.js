@@ -123,6 +123,7 @@ endDate ? dayjs(endDate).format("YYYY-MM-DD"):'')
                     <DatePicker
                       label="Start Date"
                       value={startDate}
+                      format="DD-MM-YYYY"
                       onChange={(newValue)=>{
                         setStartDate(newValue)
                       }}
@@ -147,6 +148,7 @@ endDate ? dayjs(endDate).format("YYYY-MM-DD"):'')
                     <DatePicker
                       label="End Date"
                       value={endDate}
+                      format="DD-MM-YYYY"
                       onChange={(newValue)=>{
                         setEndDate(newValue)
                       }}

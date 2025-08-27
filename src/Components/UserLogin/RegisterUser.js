@@ -6,7 +6,7 @@ import {
   FormGroup,
   Label,
   Input,
-//   Button,
+  RegisterCard,
   TextCenter
 } from "../../styled_components/register.styled";
 import { Button } from "@mui/material";
@@ -31,7 +31,7 @@ export default function RegisterUser() {
 
   return (
     <Container>
-      <Card>
+      <RegisterCard>
         <Title>Register</Title>
         <form onSubmit={handleSubmit}>
           <FormGroup>
@@ -86,7 +86,7 @@ export default function RegisterUser() {
             />
           </FormGroup>
 
-          <Button variant='contained' type="submit" fullWidth>Register</Button>
+          <Button variant='contained' style={{margin:"0 auto"}} type="submit" fullWidth>Register</Button>
 
           <TextCenter>
             <small>
@@ -94,7 +94,7 @@ export default function RegisterUser() {
             </small>
           </TextCenter>
         </form>
-      </Card>
+      </RegisterCard>
     </Container>
   );
 }

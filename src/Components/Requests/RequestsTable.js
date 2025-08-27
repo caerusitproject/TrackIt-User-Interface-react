@@ -140,11 +140,19 @@ export default function RequestsTable() {
   };
 
   // ✅ Handle Individual Row Selection
-  const handleSelectRow = (id) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
-    );
+  const handleSelectRow = (isChecked,indiVidualId) => {
+    if(isChecked){
+      let array= [...selected];
+      array.push(indiVidualId);
+      setSelected([...array])
+    }else{
+       let array= [...selected];
+       let index = array.findIndex(x => x == indiVidualId);
+       array.splice(index, 1);
+       setSelected([...array]);
+    }
   };
+  console.log('selected array__',selected)
 
   const isSelected = (id) => selected.includes(id);
 
@@ -155,10 +163,31 @@ export default function RequestsTable() {
   return (
   
     <StyledTableContainer component={Paper}>
+
       <HeaderBar>
         <FolderIcon />
         My Completed Requests
-        <span style={{ flex: 1 }} />
+         <span style={{ flex: 1 }} />
+            <TablePagination
+              component="div"
+              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              count={totalCount}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+              sx={{
+                ml: 2, // small margin to separate from buttons
+                "& .MuiTablePagination-toolbar": {
+                  padding: 0,
+                  minHeight: "40px",
+                },
+                "& .MuiTablePagination-displayedRows": {
+                  margin: 0,
+                },
+              }}
+            />
         <Button variant="outlined" size="small">
           <RefreshIcon />
         </Button>
@@ -172,6 +201,8 @@ export default function RequestsTable() {
           size="small">
           <FilterAltIcon />
         </Button>
+
+    
       </HeaderBar>
 
       <Toolbar>
@@ -227,7 +258,7 @@ export default function RequestsTable() {
                     <Checkbox
                       checked={isSelected(row.id)}
                       onClick={(e) => e.stopPropagation()}   // Prevent row click
-                      onChange={() => handleSelectRow(row.id)}
+                      onChange={(e,isChecked) => handleSelectRow(isChecked,row.id)}
                     />
                   </StyledCell>
                   <StyledCell>
@@ -243,7 +274,7 @@ export default function RequestsTable() {
           )}
         </TableBody>
 
-        <TableFooter>
+        {/* <TableFooter>
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
@@ -256,7 +287,7 @@ export default function RequestsTable() {
               ActionsComponent={TablePaginationActions}
             />
           </TableRow>
-        </TableFooter>
+        </TableFooter> */}
       </Table>
       <FilterDialogue
         open={open}
