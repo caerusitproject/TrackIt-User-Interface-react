@@ -61,7 +61,9 @@ const CollapseButton = styled(IconButton).withConfig({
 
 export default function MyAllTasks() {
   const [collapsed, setCollapsed] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+
+  console.log('always open__',open)
 
   return (
     <CollapsiblePanel collapsed={collapsed ? 1 : 0}>

@@ -1,3 +1,4 @@
+import { Outlet } from 'react-router-dom';
 import MyTaskAddition from './MyTaskAddition'
 import RequestsTable from "./RequestsTable"
 import styled from 'styled-components'
@@ -23,6 +24,7 @@ export default function Request() {
       <ContentWrapper>
         <MyTaskAddition/>
         <RequestsTable/>
+        {/* <Outlet/> */}
       </ContentWrapper>
     </div>
   )

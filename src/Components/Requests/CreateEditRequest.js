@@ -22,6 +22,7 @@ import styled from "styled-components";
 import { default as Selected } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import Slide from '@mui/material/Slide';
+import TextEditor from "./TicketDetails/TextEditor";
 
 import dayjs from "dayjs";
 
@@ -246,9 +247,10 @@ export default function TicketPropertiesDialog({open,setOpen}) {
             {/* Description */}
             <Box mt={3}>
               <Typography>Description</Typography>
-              <TextField fullWidth multiline minRows={5} />
+                <TextEditor/>
+              {/* <TextField fullWidth multiline minRows={5} /> */}
             </Box>
-              <Box mt={4}>
+              <Box mt={8}>
                 <Selected 
                   styles={{
                         control: (provided) => ({

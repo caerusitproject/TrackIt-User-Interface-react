@@ -157,7 +157,7 @@ export default function RequestsTable() {
   const isSelected = (id) => selected.includes(id);
 
   const handleRedirect = (id)=>{
-    navigate(`/ticket/${id}`)
+    navigate(`/request/ticket/${id}`)
   }
 
   return (
