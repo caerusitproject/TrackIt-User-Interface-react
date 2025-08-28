@@ -20,7 +20,7 @@ export const Toolbar = styled.div`
 `;
 
 export const StyledTableContainer = styled(TableContainer)`
-  border: 1px solid #ddd;
+  // border: 1px solid #ddd;
   border-radius: 6px;
   overflow: hidden;
   width: 100%;

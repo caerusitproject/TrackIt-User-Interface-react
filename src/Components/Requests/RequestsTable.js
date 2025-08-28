@@ -7,7 +7,6 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  Paper,
   IconButton,
   TablePagination,
   TableFooter,
@@ -29,7 +28,7 @@ import {
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SettingsIcon from "@mui/icons-material/Settings";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import { Button } from "@mui/material";
+import { Button,Paper } from "@mui/material";
 import {
 HeaderBar,
 Toolbar,
@@ -41,6 +40,7 @@ StyledCell,
 YellowDot
 } from "../../styled_components/requesttable.styled"
 import { useNavigate } from "react-router-dom";
+import FilterDialogue from "./FilterDialogue";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -93,6 +93,8 @@ export default function RequestsTable() {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [open,setOpen] = useState(false);
+  const [checked, setChecked] = React.useState(false);
 
   // ✅ Selection State
   const [selected, setSelected] = useState([]);
@@ -151,6 +153,7 @@ export default function RequestsTable() {
   }
 
   return (
+  
     <StyledTableContainer component={Paper}>
       <HeaderBar>
         <FolderIcon />
@@ -162,7 +165,11 @@ export default function RequestsTable() {
         <Button variant="outlined" size="small">
           <SettingsIcon />
         </Button>
-        <Button variant="outlined" size="small">
+          <Button variant="outlined" onClick={()=>{
+            setOpen(true)
+            // setChecked(true)
+          }}
+          size="small">
           <FilterAltIcon />
         </Button>
       </HeaderBar>
@@ -251,6 +258,12 @@ export default function RequestsTable() {
           </TableRow>
         </TableFooter>
       </Table>
+      <FilterDialogue
+        open={open}
+        setOpen={setOpen}
+        checked={checked}
+        setChecked={setChecked}
+      />
     </StyledTableContainer>
   );
 }

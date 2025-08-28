@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -13,62 +13,95 @@ import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [showInput, setShowInput] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [pendingRoute, setPendingRoute] = React.useState(null); // new
+  const [showInput, setShowInput] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [pendingRoute, setPendingRoute] = useState(null);
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // highlight state
+  const [highlightStyle, setHighlightStyle] = useState({});
+  const navRefs = useRef({}); // store refs for nav items
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+  const handleMenu = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
   const handleNavigate = (path) => {
     setPendingRoute(path);
     handleClose();
   };
 
-  // 🔁 Watch for menu close, then navigate
-  React.useEffect(() => {
+  useEffect(() => {
     if (!anchorEl && pendingRoute) {
       navigate(pendingRoute);
       setPendingRoute(null);
     }
   }, [anchorEl, pendingRoute, navigate]);
 
+  const navItems = ["home", "request", "solution", "asset", "report"];
+
+  // update highlight on location change
+  useEffect(() => {
+    const activePath = location.pathname;
+    const activeItem = navItems.find((item) => `/${item}` === activePath);
+    if (activeItem && navRefs.current[activeItem]) {
+      const el = navRefs.current[activeItem];
+      setHighlightStyle({
+        left: el.offsetLeft,
+        width: el.offsetWidth,
+      });
+    }
+  }, [location.pathname]);
+
   return (
-    <AppBar
-      position="static"
-      sx={{ backgroundColor: "#D95D2E" }} // orange
-    >
+    <AppBar position="static" sx={{ backgroundColor: "#D95D2E" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         {/* Menu Links */}
-        <Box sx={{ display: "flex", gap: 4 }}>
-          {["home", "request", "solution", "asset", "report"].map((item) => (
-            <NavLink
-              key={item}
-              to={`/${item}`}
-              style={({ isActive }) => ({
-                color: isActive ? "#fff" : "rgba(255,255,255,0.8)",
-                textDecoration: "none",
-                fontWeight: isActive ? "bold" : "normal",
-              })}
-            >
-              {item.charAt(0).toUpperCase() + item.slice(1)}
-            </NavLink>
-          ))}
+        <Box sx={{ position: "relative", display: "flex", gap: 4 }}>
+          {/* highlight div */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              background: "white",
+              borderRadius: "10px",
+              padding:"5px",
+              height:"27px",
+              transition: "all 0.3s ease",
+              ...highlightStyle,
+            }}
+          />
+          {navItems.map((item) => {
+            const path = `/${item}`;
+            const isActive = location.pathname === path;
+            return (
+              <NavLink
+                key={item}
+                to={path}
+                ref={(el) => (navRefs.current[item] = el)}
+                style={{
+                  position: "relative",
+                  padding: "6px 14px",
+                  borderRadius: "6px",
+                  textAlign:"center",
+                  color: isActive ? "#D95D2E" : "rgba(255,255,255,0.8)",
+                  fontWeight: isActive ? "bold" : "normal",
+                  textDecoration: "none",
+                  zIndex: 1, // make sure text is above highlight
+                }}
+              >
+                {item.charAt(0).toUpperCase() + item.slice(1)}
+              </NavLink>
+            );
+          })}
         </Box>
 
         {/* Right side icons */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {/* Expanding Search Field */}
           <Box
             sx={{
               width: showInput ? 200 : 0,
@@ -112,7 +145,6 @@ export default function Navbar() {
             </IconButton>
           </Tooltip>
 
-          {/* Account Menu */}
           <Tooltip title="Account">
             <IconButton onClick={handleMenu} sx={{ color: "white" }}>
               <AccountCircleIcon />

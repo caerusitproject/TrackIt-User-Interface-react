@@ -1,11 +1,15 @@
 import styled from 'styled-components';
 
 export const PanelAnnouncements = styled.div.attrs({ className: "card panel-announcements" })`
-  border: 1.5px solid #dadada;
+  // border: 1.5px solid #dadada;
   border-radius: 6px;
   background: #fff;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease;
+   &:hover {
+    transform: scale(1.01);
+  }
 
   .card-body {
     padding-left: 24px;
@@ -18,6 +22,7 @@ export const PanelAnnouncements = styled.div.attrs({ className: "card panel-anno
 `;
 
 export const AnnouncementsHeader = styled.div.attrs({ className: "announcements-header" })`
+  border-bottom: 1.5px solid #dadada;
   font-weight: 600;
   color: #124480;
   font-size: 1.08rem;
