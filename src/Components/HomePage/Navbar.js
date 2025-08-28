@@ -76,28 +76,30 @@ export default function Navbar() {
             }}
           />
           {navItems.map((item) => {
-            const path = `/${item}`;
-            const isActive = location.pathname === path;
-            return (
-              <NavLink
-                key={item}
-                to={path}
-                ref={(el) => (navRefs.current[item] = el)}
-                style={{
-                  position: "relative",
-                  padding: "6px 14px",
-                  borderRadius: "6px",
-                  textAlign:"center",
-                  color: isActive ? "#D95D2E" : "rgba(255,255,255,0.8)",
-                  fontWeight: isActive ? "bold" : "normal",
-                  textDecoration: "none",
-                  zIndex: 1, // make sure text is above highlight
-                }}
-              >
-                {item.charAt(0).toUpperCase() + item.slice(1)}
-              </NavLink>
-            );
-          })}
+              const path = `/${item}`;
+              const isActive = location.pathname.startsWith(path); // <-- key change
+
+              return (
+                <NavLink
+                  key={item}
+                  to={path}
+                  ref={(el) => (navRefs.current[item] = el)}
+                  style={{
+                    position: "relative",
+                    padding: "6px 14px",
+                    borderRadius: "6px",
+                    textAlign: "center",
+                    color: isActive ? "#D95D2E" : "rgba(255,255,255,0.8)",
+                    fontWeight: isActive ? "bold" : "normal",
+                    textDecoration: "none",
+                    zIndex: 1, // text above highlight
+                  }}
+                >
+                  {item.charAt(0).toUpperCase() + item.slice(1)}
+                </NavLink>
+              );
+            })}
+
         </Box>
 
         {/* Right side icons */}

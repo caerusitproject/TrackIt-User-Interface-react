@@ -9,8 +9,9 @@ import Footer from "../Components/HomePage/Footer";
 import Login from "../Components/UserLogin/LoginPage";
 import PasswordReset from "../Components/UserLogin/PasswordReset";
 import RegisterPage from "../Components/UserLogin/RegisterUser";
-import GlobalLoader from "./GlobalLoader";
+import GlobalLoader from "../Config/GlobalLoader";
 import LinearProgress from '@mui/material/LinearProgress';
+import SuccessFailureSnackbar from "../Config/SuccessFailureSnackbar";
 
 // Layout with Navbar + Footer
 function AppLayout() {
@@ -20,6 +21,7 @@ function AppLayout() {
       <div style={{ marginTop: "4px", marginBottom: "24px" }}>
         <Suspense fallback={<LinearProgress/>}>
           <GlobalLoader/>
+          <SuccessFailureSnackbar/>
           <Outlet />
         </Suspense>
       </div>
