@@ -11,6 +11,7 @@ import {
 } from "../../styled_components/register.styled";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import PasswordStrengthBar from 'react-password-strength-bar';
 
 export default function RegisterUser() {
   const [formData, setFormData] = useState({
@@ -84,6 +85,14 @@ export default function RegisterUser() {
               onChange={handleChange}
               required
             />
+              {/* Password checker bar */}
+                {formData && formData.password && 
+                  <PasswordStrengthBar 
+                  style={{width:"100%",margin:"0 auto",marginTop:"10px"}}
+                  minLength={8}
+                  password={formData?.password} />
+                
+                }
           </FormGroup>
 
           <Button variant='contained' style={{margin:"0 auto"}} type="submit" fullWidth>Register</Button>
