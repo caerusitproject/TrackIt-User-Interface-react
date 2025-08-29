@@ -34,6 +34,7 @@ function AppLayout() {
 function PublicLayout() {
   return (
     <div style={{ minHeight: "100vh" }}>
+      <SuccessFailureSnackbar/>
       <Outlet />
     </div>
   );

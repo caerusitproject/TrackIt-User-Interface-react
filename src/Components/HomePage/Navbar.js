@@ -25,7 +25,53 @@ import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FlagIcon from "@mui/icons-material/Flag";
+import Divider from '@mui/material/Divider';
+import InputBase from '@mui/material/InputBase';
+import { alpha,styled } from '@mui/material/styles';
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+
+
+ const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+}));
+
+ const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  width: '100%',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    [theme.breakpoints.up('sm')]: {
+      width: '12ch',
+      '&:focus': {
+        width: '20ch',
+      },
+    },
+  },
+}));
+
+ const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -40,6 +86,8 @@ export default function Navbar() {
   const navRefs = useRef({});
 
   // Nav items with proper icons
+
+
   const navItems = [
     { text: "home", icon: <HomeFilledIcon /> },
     { text: "request", icon: <ConfirmationNumberIcon /> },
@@ -148,7 +196,7 @@ export default function Navbar() {
 
           {/* Right side icons */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Box
+            {/* <Box
               sx={{
                 width: showInput ? 200 : 0,
                 opacity: showInput ? 1 : 0,
@@ -156,24 +204,29 @@ export default function Navbar() {
                 transition: "width 0.3s ease, opacity 0.3s ease",
               }}
             >
-              <TextField
-                size="small"
-                autoFocus={showInput}
-                placeholder="Search..."
-                variant="outlined"
-                fullWidth
-                sx={{ background: "white", borderRadius: 1 }}
-              />
-            </Box>
+            </Box> */}
+            <Toolbar style={{paddingRight:'0px'}}>
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  id='searchfield'
+                  placeholder="Search…"
+                  onChange={(e)=>e.preventDefault()}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </Search>
+            </Toolbar>
 
-            <Tooltip title="Search">
+            {/* <Tooltip title="Search">
               <IconButton
                 onClick={() => setShowInput((prev) => !prev)}
                 sx={{ color: "white" }}
               >
                 <SearchIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             <Tooltip title="Notifications">
               <IconButton sx={{ color: "white" }}>
@@ -216,26 +269,38 @@ export default function Navbar() {
         >
           <Box sx={{ width: 250 }}>
             <List>
-              {navItems.map((item) => (
-                <ListItem key={item.text} disablePadding>
+         {navItems.map((item, index) => (
+              <React.Fragment key={item.text}>
+                <ListItem disablePadding>
                   <ListItemButton
                     onClick={() => {
                       navigate(`/${item.text}`);
                       setDrawerOpen(false);
                     }}
                   >
-                    <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:"2px"}}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        gap: "8px"
+                      }}
+                    >
                       <span>{item.icon}</span>
                       <ListItemText
                         primary={
-                          item.text.charAt(0).toUpperCase() +
-                          item.text.slice(1)
+                          item.text.charAt(0).toUpperCase() + item.text.slice(1)
                         }
                       />
                     </div>
                   </ListItemButton>
                 </ListItem>
-              ))}
+
+                {/* Divider should be outside ListItem */}
+                {index < navItems.length - 1 && <Divider />}
+              </React.Fragment>
+            ))}
+
             </List>
           </Box>
         </Drawer>
