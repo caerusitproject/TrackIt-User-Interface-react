@@ -4,7 +4,7 @@ export const FooterRow = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding: 12px 28px;
-  gap: 250px;
+  gap: 200px;
 
   @media (max-width: 600px) {
     gap: 16px;

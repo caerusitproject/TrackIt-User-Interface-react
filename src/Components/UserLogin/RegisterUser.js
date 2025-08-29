@@ -12,8 +12,14 @@ import {
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import PasswordStrengthBar from 'react-password-strength-bar';
+import {validateEmail,checkPasswordComplexity,
+  firstLastName} from "../../Config/utils";
+import {openSnackbar} from "../../actions"
+import { useDispatch } from "react-redux";
+import * as actions from "../../actions";
 
 export default function RegisterUser() {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,8 +33,37 @@ export default function RegisterUser() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
+    let forwardForm= isValidate();
+    if(forwardForm?.enabler == 'success'){
+      // form submission will happen here
+      console.log("Form Submitted:",forwardForm, checkPasswordComplexity(formData?.password));
+    }else{
+      dispatch(actions.openSnackbar(forwardForm))
+      // alert(forwardForm?.messager)
+    }
   };
+
+  const isValidate=()=>{
+    let enable = false;
+    let message = ''
+    if(formData && !validateEmail(formData?.email) && formData?.email.length > 0 ){
+      enable = true
+      message= 'Format of email is invalid!'
+    }
+    if(formData && !firstLastName(formData?.firstName) && formData?.firstName.length > 0){
+      enable = true
+      message= 'First Name is not valid!'
+    }
+    if(formData && !firstLastName(formData?.lastName) && formData?.lastName.length > 0){
+      enable = true
+      message= 'Last Name is not valid!'
+    }
+    if(formData && !checkPasswordComplexity(formData?.password) && formData?.password.length > 0){
+      enable = true
+      message= 'Password format is not satisfactory!'
+    }
+    return {status:enable && enable == true ? 'error' : 'success', message:message}
+  }
 
   return (
     <Container>
@@ -95,7 +130,16 @@ export default function RegisterUser() {
                 }
           </FormGroup>
 
-          <Button variant='contained' style={{margin:"0 auto"}} type="submit" fullWidth>Register</Button>
+          <Button 
+              variant='contained'
+              style={{margin:"0 auto"}} 
+              type="submit"
+              fullWidth
+              disabled={(formData?.email.length > 0 && formData?.firstName.length > 0 &&
+                formData?.lastName.length > 0 && formData?.password.length > 0) ? false : true
+              }
+          >
+          Register</Button>
 
           <TextCenter>
             <small>

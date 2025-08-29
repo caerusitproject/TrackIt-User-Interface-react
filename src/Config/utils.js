@@ -5,8 +5,7 @@ export const validateEmail = (email) => {
 
 export const checkPasswordComplexity = (pwd) => {
   var regularExpression = /^(?=.*\d)(?=.*[!@#$%^&*_])(?=.*[a-zA-Z]).{6,}$/;
-  var valid = regularExpression.test(pwd);
-  return valid;
+  return regularExpression.test(pwd);
 };
 
 export const firstLastName = (flname)=>{
