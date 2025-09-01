@@ -15,7 +15,7 @@ import {
 } from '../../styled_components/login.styled';
 import {TextField,InputAdornment,Button} from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PasswordIcon from '@mui/icons-material/Password';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -24,8 +24,36 @@ import InputLabel from '@mui/material/InputLabel';
 import Paper from "@mui/material/Paper";
 import GoogleIcon from '@mui/icons-material/Google';
 import MicrosoftIcon from '@mui/icons-material/Microsoft';
+import * as actions from "../../actions";
+import { useDispatch } from 'react-redux';
 
 function Login() {
+  const dispatch=useDispatch()
+  const navigate =useNavigate();
+  const [value, setValue] = React.useState({
+    email:'',
+    password:'',
+    domain:''
+  })
+
+  const handleChange =(e)=>{
+    setValue({...value,[e.target.name]:e.target.value})
+  }
+ const handleSubmit = (e)=>{
+   e.preventDefault();
+  console.log('login form___',value)
+    if(value && (value.email.length > 0 && value.password.length > 0 && typeof(value.domain) == 'string')){
+      dispatch(actions.openSnackbar({message:'Login Successfull',status:'success'}))
+      navigate('/home')
+      setValue({...value,email:'',domain:'',password:''})
+    }else{
+      return
+    }
+
+ }
+
+
+
   return (
       <Paper elevation={13}>
       <LoginPageBg>
@@ -80,14 +108,17 @@ function Login() {
 
             <DividerOr><span>OR</span></DividerOr>
           {/* // form handling for inouts // */}
-            <form autoComplete="off">
+            <form onSubmit={handleSubmit} autoComplete="off">
                 <Inputgroup>
                         <TextField 
                           type="text"
                           id="outlined-basic" 
                           label="Email" 
+                          name="email"
+                          value={value.email}
                           variant="outlined" 
                           autoComplete='on'
+                          onChange={handleChange}
                           slotProps={{
                           input: {
                             startAdornment: (
@@ -103,8 +134,11 @@ function Login() {
                           id="outlined-basic" 
                           type="password"
                           label="Password" 
+                          name="password"
                           autoComplete='on'
+                          value={value.password}
                           variant="outlined" 
+                          onChange={handleChange}
                           slotProps={{
                           input: {
                             startAdornment: (
@@ -120,34 +154,32 @@ function Login() {
                             <Select
                               labelId="demo-simple-select-helper-label"
                               id="demo-simple-select-helper"
-                              // value={age}
-                              label="Age"
-                              // onChange={handleChange}
+                              name="domain"
+                              value={value.domain}
+                              label="Domain"
+                              onChange={handleChange}
                             >
                               <MenuItem value="">
                                 <em>None</em>
                               </MenuItem>
-                              <MenuItem value={10}>Ten</MenuItem>
-                              <MenuItem value={20}>Twenty</MenuItem>
-                              <MenuItem value={30}>Thirty</MenuItem>
+                              <MenuItem value={'10'}>Domain 1</MenuItem>
+                              <MenuItem value={'20'}>Domain 2</MenuItem>
+                              <MenuItem value={'30'}>Domain 3</MenuItem>
                             </Select>
                           </FormControl>
                           </Inputgroup>
-                    
-                          {/* domain name will be added if needed */}
-                          {/* <StyledInputGroupText className="input-group-text"><i className="bi bi-globe2" /></StyledInputGroupText>
-                          <StyledSelect className="form-select">
-                            <option>Domain 1</option>
-                            <option>Domain 2</option>
-                            <option>Domain 3</option>
-                          </StyledSelect> */}
-                    <InputgroupButtons>
-                    <Button variant="contained" style={{width:"70%"}} >Log In</Button>
-                    <TextCenter>
-                    <small><Link to='/password_reset'>Forgot Password?</Link></small>
-                    <small>New to Track It <Link to = '/register-user'>Sign Up</Link></small>
-                    </TextCenter>
-                    </InputgroupButtons>
+                      <InputgroupButtons>
+                      <Button 
+                        type="submit"
+                        variant="contained" 
+                        style={{width:"70%"}}
+                        disabled={value && value.email.length > 0 && value.password.length > 0 && value.domain.length > 0 ? false : true}
+                        >Log In</Button>
+                        <TextCenter>
+                        <small><Link to='/password_reset'>Forgot Password?</Link></small>
+                        <small>New to Track It <Link to = '/register-user'>Sign Up</Link></small>
+                      </TextCenter>
+                      </InputgroupButtons>
             </form>
           </LoginCard>
       </LoginPageBg>
