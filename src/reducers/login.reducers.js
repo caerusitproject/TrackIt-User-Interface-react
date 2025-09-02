@@ -1,8 +1,11 @@
 // src/reducers/userReducer.js
+const storedUser = localStorage.getItem("user");
 const initialState = {
  message:null,
  status:null,
- opener:false
+ opener:false,
+ isAuthenticated: storedUser ? true : false,
+ user: storedUser ? JSON.parse(storedUser) : null,
 };
 
 export const loginReducer = (state = initialState, action) => {
@@ -19,6 +22,13 @@ export const loginReducer = (state = initialState, action) => {
         ...state, 
         opener:false
     };
+    case "LOGIN_SUCCESS":
+      localStorage.setItem('user',JSON.stringify(action.payload))
+      return { ...state, isAuthenticated: true, user: action.payload };
+
+    case "LOGOUT":
+      localStorage.clear();
+      return { ...state, isAuthenticated: false, user: null };
     
     default:
       return state;
