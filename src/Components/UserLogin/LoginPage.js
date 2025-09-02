@@ -25,9 +25,11 @@ import Paper from "@mui/material/Paper";
 import GoogleIcon from '@mui/icons-material/Google';
 import MicrosoftIcon from '@mui/icons-material/Microsoft';
 import * as actions from "../../actions";
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
+import { Navigate } from "react-router-dom";
 
 function Login() {
+  const isAuthenticated = useSelector((state) => state.login.isAuthenticated);
   const dispatch=useDispatch()
   const navigate =useNavigate();
   const [value, setValue] = React.useState({
@@ -36,6 +38,12 @@ function Login() {
     domain:''
   })
 
+    
+
+  if (isAuthenticated) {
+    return <Navigate to="/home" replace />;
+  }
+
   const handleChange =(e)=>{
     setValue({...value,[e.target.name]:e.target.value})
   }
@@ -43,6 +51,12 @@ function Login() {
    e.preventDefault();
   console.log('login form___',value)
     if(value && (value.email.length > 0 && value.password.length > 0 && typeof(value.domain) == 'string')){
+      let useData = {
+        email:value.email,
+        password:value.password,
+        domain:value.domain
+      }
+      dispatch(actions.loginSucess(useData))
       dispatch(actions.openSnackbar({message:'Login Successfull',status:'success'}))
       navigate('/home')
       setValue({...value,email:'',domain:'',password:''})

@@ -29,6 +29,8 @@ import Divider from '@mui/material/Divider';
 import InputBase from '@mui/material/InputBase';
 import { alpha,styled } from '@mui/material/styles';
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import * as actions from "../../actions"
 
 
  const Search = styled('div')(({ theme }) => ({
@@ -76,6 +78,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch=useDispatch();
 
   const [showInput, setShowInput] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -255,7 +258,13 @@ export default function Navbar() {
               <MenuItem onClick={() => handleNavigate("/account-details")}>
                 My account
               </MenuItem>
-              <MenuItem onClick={() => handleNavigate("/")}>Log Out</MenuItem>
+              <MenuItem onClick={() =>
+                { 
+                 dispatch(actions.logout())
+                 navigate("/login", { replace: true });
+                //  handleNavigate("/login")
+                }
+                 }>Log Out</MenuItem>
             </Menu>
           </Box>
         </Toolbar>

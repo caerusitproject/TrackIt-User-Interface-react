@@ -13,7 +13,7 @@ const AccountDetails = lazy(() => import('../Components/HomePage/AccountDetails'
 
 
 export const routes = [
-  { path: '/', element: <LoginPage /> },
+  { path: '/login', element: <LoginPage /> },
   { path: '/register-user', element: <RegisterPage /> },
   { path: '/request', element: <Request /> },
   { path: '/account-details', element: <AccountDetails /> },
