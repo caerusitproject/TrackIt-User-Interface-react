@@ -1,122 +1,86 @@
-// TicketPropertiesDialog.jsx
 import React, { useState } from "react";
 import {
+  Box,
+  Paper,
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+  InputLabel,
+  FormControl,
   Dialog,
   AppBar,
   Toolbar,
   IconButton,
-  Typography,
-  Button,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import styled from "styled-components";
-import SideBarPanelAssoProjects from './SideBarPanelAssoProjects';
+import { default as Selected } from 'react-select';
+import makeAnimated from 'react-select/animated';
+import Slide from '@mui/material/Slide';
+import TextEditor from "./TicketDetails/TextEditor";
 
-// Styled Components
+import dayjs from "dayjs";
+
+// Styled container
 const Container = styled.div`
-  background: #f8f9fa;
-  padding: 16px;
-`;
-
-const MainPanel = styled.div`
-  border: 1.5px solid #dadada;
+  background: #fff;
   border-radius: 6px;
-  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  border: 1px solid #e0e0e0;
+  margin: 35px auto;
+  max-width: 1100px;
+`;
+
+const Header = styled.div`
+  background-color: #f3f3f3;
+  border-bottom: 1px solid #ddd;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  padding: 10px 16px;
   display: flex;
-  min-height: 440px;
-  margin-top: 16px;
-  overflow: hidden;
-
-  @media (max-width: 991px) {
-    flex-direction: column;
-  }
+  justify-content: space-between;
+  align-items: center;
 `;
 
-const PanelProps = styled.div`
-  flex: 2;
-  border-right: 1.5px solid #dadada;
-  padding: 18px;
-  overflow-y: auto;
-
-  @media (max-width: 991px) {
-    border-right: none;
-    border-bottom: 1.5px solid #dadada;
-  }
-`;
-
-const FormGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-`;
-
-const PanelSide = styled.div`
-  flex: 1;
-  padding: 18px 23px;
-  min-width: 240px;
+const Card = styled.div`
+  padding: 24px;
+  margin: 30px auto;
   background: #fff;
-
-  @media (max-width: 991px) {
-    min-width: 0;
-  }
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
-const PropsHeader = styled.span`
-  font-weight: 600;
-  font-size: 1.03rem;
-  color: #222;
-  margin-right: 12px;
-`;
+const animatedComponents = makeAnimated();
 
-const EditLink = styled.span`
-  color: #f06c35;
-  font-size: 0.97rem;
-  cursor: pointer;
-`;
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
-export default function TicketPropertiesDialog() {
-  const [open, setOpen] = useState(true);
+export default function TicketPropertiesDialog({open,setOpen}) {
+  const [startDate, setStartDate] = useState(dayjs());
+  const [endDate, setEndDate] = useState(dayjs().add(1, "day"));
+
   const handleClose = () => setOpen(false);
 
-  const [formData, setFormData] = useState({
-    category: "Software",
-    priority: "Normal",
-    subcategory: "Oracle",
-    status: "Open",
-    item: "Not Assigned",
-    mode: "Email",
-    impact: "Single User",
-    group: "Application Support",
-    site: "-",
-    technician: "-",
-    emailNotify: "-",
-    urgency: "2 Business Days",
-    requestType: "Incident",
-    serviceCategory: "Default Templates",
-    assets: "-",
-    createdBy: "System",
-    department: "-",
-    sla: "SEV-2",
-    template: "Default Request",
-    createdDate: "Jul 1, 2025 03:10 PM",
-    startTime: "-",
-    endTime: "-",
-    dueDate: "Jul 3, 2025 03:10 PM",
-    responseTime: "-",
-    lastUpdate: "Jul 1, 2025 04:10 PM",
-  });
-
-  const handleChange = (field) => (event) => {
-    setFormData({ ...formData, [field]: event.target.value });
-  };
+  const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' }
+]
 
   return (
-    <Dialog fullScreen open={open} onClose={handleClose}>
+    <Dialog 
+       slots={{
+          transition: Transition,
+        }}
+      fullScreen 
+      open={open}
+      onClose={handleClose}>
       {/* Top Bar */}
       <AppBar sx={{ position: "relative", backgroundColor: "#f06c35" }}>
         <Toolbar>
@@ -133,246 +97,232 @@ export default function TicketPropertiesDialog() {
       </AppBar>
 
       {/* Content */}
-      <Container>
-        <MainPanel>
-          {/* Left: Form */}
-          <PanelProps>
-            <div style={{ marginBottom: "16px" }}>
-              <PropsHeader>Properties</PropsHeader>
-              <EditLink>Edit</EditLink>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Container>
+          {/* Header */}
+          <Header>
+            <div>
+              <span>Request ID :</span>
+              <strong style={{ marginLeft: 6 }}>84581</strong>
             </div>
-
-            <form>
-              <FormGrid>
-                {/* Category */}
-                <FormControl size="small" fullWidth>
-                  <InputLabel>Category</InputLabel>
-                  <Select
-                    value={formData.category}
-                    label="Category"
-                    onChange={handleChange("category")}
-                  >
-                    <MenuItem value="Software">Software</MenuItem>
-                    <MenuItem value="Hardware">Hardware</MenuItem>
-                    <MenuItem value="Network">Network</MenuItem>
-                  </Select>
-                </FormControl>
-
-                {/* Priority */}
-                <FormControl size="small" fullWidth>
-                  <InputLabel>Priority</InputLabel>
-                  <Select
-                    value={formData.priority}
-                    label="Priority"
-                    onChange={handleChange("priority")}
-                  >
-                    <MenuItem value="Low">Low</MenuItem>
-                    <MenuItem value="Normal">Normal</MenuItem>
-                    <MenuItem value="High">High</MenuItem>
-                  </Select>
-                </FormControl>
-
-                {/* Subcategory */}
-                <TextField
-                  label="Subcategory"
-                  value={formData.subcategory}
-                  onChange={handleChange("subcategory")}
-                  size="small"
-                  fullWidth
-                />
-
-                {/* Status */}
-                <FormControl size="small" fullWidth>
-                  <InputLabel>Status</InputLabel>
-                  <Select
-                    value={formData.status}
-                    label="Status"
-                    onChange={handleChange("status")}
-                  >
-                    <MenuItem value="Open">Open</MenuItem>
-                    <MenuItem value="In Progress">In Progress</MenuItem>
-                    <MenuItem value="Closed">Closed</MenuItem>
-                  </Select>
-                </FormControl>
-
-                {/* Group */}
-                <FormControl size="small" fullWidth>
-                  <InputLabel>Group</InputLabel>
-                  <Select
-                    value={formData.group}
-                    label="Group"
-                    onChange={handleChange("group")}
-                  >
-                    <MenuItem value="Application Support">
-                      Application Support
-                    </MenuItem>
-                    <MenuItem value="IT Helpdesk">IT Helpdesk</MenuItem>
-                    <MenuItem value="Network Team">Network Team</MenuItem>
-                  </Select>
-                </FormControl>
-
-                {/* Remaining fields */}
-                <TextField
-                  label="Mode"
-                  value={formData.mode}
-                  onChange={handleChange("mode")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Impact"
-                  value={formData.impact}
-                  onChange={handleChange("impact")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Site"
-                  value={formData.site}
-                  onChange={handleChange("site")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Technician"
-                  value={formData.technician}
-                  onChange={handleChange("technician")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Email IDs to Notify"
-                  value={formData.emailNotify}
-                  onChange={handleChange("emailNotify")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Urgency"
-                  value={formData.urgency}
-                  onChange={handleChange("urgency")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Request Type"
-                  value={formData.requestType}
-                  onChange={handleChange("requestType")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Service Category"
-                  value={formData.serviceCategory}
-                  onChange={handleChange("serviceCategory")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Asset(s)"
-                  value={formData.assets}
-                  onChange={handleChange("assets")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Created By"
-                  value={formData.createdBy}
-                  onChange={handleChange("createdBy")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Department"
-                  value={formData.department}
-                  onChange={handleChange("department")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="SLA"
-                  value={formData.sla}
-                  onChange={handleChange("sla")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Template"
-                  value={formData.template}
-                  onChange={handleChange("template")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Created Date"
-                  value={formData.createdDate}
-                  onChange={handleChange("createdDate")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Scheduled Start Time"
-                  value={formData.startTime}
-                  onChange={handleChange("startTime")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Scheduled End Time"
-                  value={formData.endTime}
-                  onChange={handleChange("endTime")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Due By Date"
-                  value={formData.dueDate}
-                  onChange={handleChange("dueDate")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Response Due By Time"
-                  value={formData.responseTime}
-                  onChange={handleChange("responseTime")}
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  label="Last Update Time"
-                  value={formData.lastUpdate}
-                  onChange={handleChange("lastUpdate")}
-                  size="small"
-                  fullWidth
-                />
-              </FormGrid>
-            </form>
-          </PanelProps>
-
-          {/* Right: Sidebar */}
-          <SideBarPanelAssoProjects/>
-          {/* <PanelSide>
-            <div style={{ fontWeight: "bold", marginBottom: "20px" }}>
-              + Associate Project
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <label>Template</label>
+              <Select size="small" defaultValue="Default Request" style={{ width: 170 }}>
+                <MenuItem value="Default Request">Default Request</MenuItem>
+              </Select>
             </div>
-            <div style={{ marginBottom: "16px" }}>
-              <span style={{ fontWeight: "bold" }}>Tags</span>
-              <div style={{ color: "#787878" }}>No tags added</div>
-            </div>
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
-              alt="User"
-              style={{
-                width: "38px",
-                height: "38px",
-                borderRadius: "50%",
-                border: "1.5px solid #ccc",
-                objectFit: "cover",
-              }}
-            />
-          </PanelSide> */}
-        </MainPanel>
-      </Container>
+          </Header>
+
+          {/* Main Card */}
+          <Card>
+            {/* Requester */}
+            <Box display="flex" gap={2} mb={2.5}>
+              <FormControl sx={{width:"40%"}} margin="normal" variant="outlined">
+                    <Select
+                      defaultValue=""
+                      displayEmpty
+                      renderValue={(selected) =>
+                        selected !== "" ? selected : <span style={{ color: "#aaa" }}>Requester</span>
+                      }
+                    >
+                      <MenuItem value=""><em>None</em></MenuItem>
+                      <MenuItem value="dummy@gmail.com">dummy@gmail.com</MenuItem>
+                      <MenuItem value="dummy1@gmail.com">dummy1@gmail.com</MenuItem>
+                    </Select>
+                  </FormControl>
+              {/* <TextField label="Requester" size="small" /> */}
+              
+            </Box>
+              <div style={{display:"flex",justifyContent:"flex-start",alignItems:"center",gap:'12px'}}>
+                <p style={{ color: "#888",marginRight: "4px",fontSize:"18px"}}>Department :<span> Dept1</span></p>
+                <p style={{ color: "#888",marginRight: "4px",fontSize:"18px"}}>Email :<span> dummy@gmail.com</span></p>
+                <p style={{ color: "#888",marginRight: "4px",fontSize:"18px"}}>Contact :<span>9999999999</span></p>
+                <p style={{ color: "#888",marginRight: "4px",fontSize:"18px"}}>Job Title :<span> Dummy title</span></p>
+              </div>
+
+            {/* Left + Right */}
+            <Box display="flex" gap={4}>
+              {/* Left */}
+              <Box flex={1}>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <Select
+                      defaultValue=""
+                      displayEmpty
+                      renderValue={(selected) =>
+                        selected !== "" ? selected : <span style={{ color: "#aaa" }}>Category</span>
+                      }
+                    >
+                      <MenuItem value=""><em>None</em></MenuItem>
+                      <MenuItem value="Software">Software</MenuItem>
+                      <MenuItem value="Hardware">Hardware</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth margin="normal" variant="outlined">
+                    <Select
+                      defaultValue=""
+                      displayEmpty
+                      renderValue={(selected) =>
+                        selected !== "" ? selected : <span style={{ color: "#aaa" }}>Subcategory</span>
+                      }
+                    >
+                      <MenuItem value=""><em>None</em></MenuItem>
+                      <MenuItem value="Software">Oracle</MenuItem>
+                    </Select>
+                  </FormControl>
+                <TextField label="Item" fullWidth margin="normal" />
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <Select
+                      defaultValue=""
+                      displayEmpty
+                      renderValue={(selected) =>
+                        selected !== "" ? selected : <span style={{ color: "#aaa" }}>Impact</span>
+                      }
+                    >
+                      <MenuItem value=""><em>None</em></MenuItem>
+                      <MenuItem value="Single user">Single user</MenuItem>
+                    </Select>
+                  </FormControl>
+                <TextField label="Site" fullWidth margin="normal" />
+                <TextField label="Subject" fullWidth margin="normal" defaultValue="Oracle Access" />
+              </Box>
+
+              {/* Right */}
+              <Box flex={1}>
+                <FormControl fullWidth margin="normal" variant="outlined">
+                    <Select
+                      defaultValue=""
+                      displayEmpty
+                      renderValue={(selected) =>
+                        selected !== "" ? selected : <span style={{ color: "#aaa" }}>Select Priority</span>
+                      }
+                    >
+                      <MenuItem value=""><em>None</em></MenuItem>
+                      <MenuItem value="Normal">Normal</MenuItem>
+                      <MenuItem value="High">High</MenuItem>
+                      <MenuItem value="Low">Low</MenuItem>
+                    </Select>
+                  </FormControl>
+                    <FormControl fullWidth margin="normal" variant="outlined">
+                    <Select
+                      defaultValue=""
+                      displayEmpty
+                      renderValue={(selected) =>
+                        selected !== "" ? selected : <span style={{ color: "#aaa" }}>Status</span>
+                      }
+                    >
+                      <MenuItem value=""><em>None</em></MenuItem>
+                      <MenuItem value="Open">Open</MenuItem>
+                      <MenuItem value="Closed">Closed</MenuItem>
+                      <MenuItem value="Pending">Pending</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth margin="normal" variant="outlined">
+                    <Select
+                      defaultValue=""
+                      displayEmpty
+                      renderValue={(selected) =>
+                        selected !== "" ? selected : <span style={{ color: "#aaa" }}>Mode</span>
+                      }
+                    >
+                      <MenuItem value=""><em>None</em></MenuItem>
+                      <MenuItem value="Email">Email</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth margin="normal" variant="outlined">
+                    <Select
+                      defaultValue=""
+                      displayEmpty
+                      renderValue={(selected) =>
+                        selected !== "" ? selected : <span style={{ color: "#aaa" }}>Group</span>
+                      }
+                    >
+                      <MenuItem value=""><em>None</em></MenuItem>
+                      <MenuItem value="Application Support">Application Support</MenuItem>
+                    </Select>
+                  </FormControl>
+                <TextField label="Technician" fullWidth margin="normal" />
+              </Box>
+            </Box>
+
+            {/* Description */}
+            <Box mt={3}>
+              <Typography>Description</Typography>
+                <TextEditor/>
+              {/* <TextField fullWidth multiline minRows={5} /> */}
+            </Box>
+              <Box mt={8}>
+                <Selected 
+                  styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          minHeight: "50px",   // height of the select box
+                        }),
+                        valueContainer: (provided) => ({
+                          ...provided,
+                          minHeight: "50px",   // keeps content aligned
+                        }),
+                        input: (provided) => ({
+                          ...provided,
+                          minHeight: "50px",
+                        }),
+                      }}
+                  components={animatedComponents}  
+                  isMulti 
+                  options={options} 
+                />
+              </Box>
+            {/* Dates */}
+            <Box display="flex" gap={3} mt={3}>
+              <Box flex={1}>
+                <Typography>Created Date</Typography>
+                <TextField value="Jul 1, 2025 03:10 PM" fullWidth InputProps={{ readOnly: true }} />
+              </Box>
+              <Box flex={1}>
+                <Typography>Start Date</Typography>
+                <DatePicker
+                  value={startDate}
+                  onChange={setStartDate}
+                  slotProps={{ textField: { fullWidth: true, size: "medium" } }}
+                />
+              </Box>
+            </Box>
+
+            <Box display="flex" gap={3} mt={3}>
+              <Box flex={1}>
+                <Typography>End Date</Typography>
+                <DatePicker
+                  value={endDate}
+                  onChange={setEndDate}
+                  slotProps={{ textField: { fullWidth: true, size: "medium" } }}
+                />
+              </Box>
+              <Box flex={1}>
+                <Typography>Due By</Typography>
+                <TextField value="Jul 3, 2025 03:10 PM" fullWidth InputProps={{ readOnly: true }} />
+              </Box>
+            </Box>
+
+            {/* Attachments */}
+            <Box mt={3} p={2} border="1px dashed #ccc" borderRadius={4} bgcolor="#fafafa">
+              <Typography fontWeight="bold">Attachments</Typography>
+              <label style={{ color: "#d9534f", cursor: "pointer" }}>
+                Browse Files
+                <input type="file" hidden />
+              </label>{" "}
+              or Drag files here | <span style={{ fontSize: "0.9em" }}>Max size: 50 MB.</span>
+            </Box>
+
+            {/* Buttons */}
+            <Box display="flex" justifyContent="flex-end" gap={2} mt={4}>
+              <Button variant="contained" color="error">
+                Update Request
+              </Button>
+              <Button variant="outlined">Reset</Button>
+              <Button variant="outlined">Cancel</Button>
+            </Box>
+          </Card>
+        </Container>
+      </LocalizationProvider>
     </Dialog>
   );
 }

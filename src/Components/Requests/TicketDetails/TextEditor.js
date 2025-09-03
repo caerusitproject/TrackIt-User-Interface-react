@@ -39,8 +39,8 @@ export default function RichTextEditor() {
         style={{ height: "200px", marginBottom: "40px",marginTop:"20px" }}
       />
       <div className="mt-4 border p-2 rounded bg-gray-50">
-        <h3 className="font-medium">Preview:</h3>
-        <div dangerouslySetInnerHTML={{ __html: value }} />
+        {/* <h3 className="font-medium">Preview:</h3>
+        <div dangerouslySetInnerHTML={{ __html: value }} /> */}
       </div>
     </div>
   );

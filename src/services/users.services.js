@@ -1,4 +1,4 @@
-import api from "./axiosinstance"
+import api from "../Config/axiosinstance"
 
 export function fetchUserService(){
 

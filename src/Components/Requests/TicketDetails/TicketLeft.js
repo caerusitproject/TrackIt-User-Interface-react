@@ -17,16 +17,17 @@ valueStyle
 } from "../../../styled_components/requestTicketDetails"
 import TextEditor from "./TextEditor"
 import TicketResolution from "./Resolution";
+import TimeAnalysisWrapper from "./TimeAnalysis/TimeAnalysisWrapper";
 
 export default function TicketLeft() {
   const [tab, setTab] = useState(0);
-  const {id} = useParams();
+  const {ticketId} = useParams();
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
   };
 
-  console.log('Ticket ID____',id)
+  console.log('Ticket ID____',ticketId)
 
   return (
     <LeftColumn>
@@ -106,9 +107,7 @@ export default function TicketLeft() {
       {tab === 3 &&
        //  Time Analysis part to be rendered here 
         <>
-          <div>
-            Time Analysis component will be rendered here.
-          </div>
+          <TimeAnalysisWrapper/>
         </>
       }
 

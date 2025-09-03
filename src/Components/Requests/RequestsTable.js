@@ -41,7 +41,67 @@ YellowDot
 } from "../../styled_components/requesttable.styled"
 import { useNavigate } from "react-router-dom";
 import FilterDialogue from "./FilterDialogue";
+import TableHead from '@mui/material/TableHead';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import { visuallyHidden } from '@mui/utils';
+import MailIcon from '@mui/icons-material/Mail';
+import EditIcon from '@mui/icons-material/Edit';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+const headCells = [
+  {
+    id: 'mailIcon',
+    numeric: true,
+    disablePadding: false,
+    // label: <MailIcon fontSize="small" />,   // put icon in header
+  },
+  {
+    id: 'editIcon',
+    numeric: true,
+    disablePadding: false,
+    // label: <EditIcon fontSize="small" />,
+  },
+  {
+    id: 'noteIcon',
+    numeric: true,
+    disablePadding: false,
+    // label: <SummarizeIcon fontSize="small" />,
+  },
+  {
+    id: 'Id',
+    numeric: true,
+    disablePadding: false,
+    label: 'Id',
+  },
+  {
+    id: 'firstName',
+    numeric: true,
+    disablePadding: false,
+    label: 'First Name',
+  },
+  {
+    id: 'lastName',
+    numeric: true,
+    disablePadding: false,
+    label: 'Last Name',
+  }
+];
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -85,6 +145,94 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired
 };
 
+function EnhancedTableHead(props) {
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+    props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  return (
+    <TableHead>
+  <TableRow sx={{background:'#eff0f0ff'}}>
+    <TableCell >
+      <Checkbox
+        color="primary" 
+        indeterminate={numSelected > 0 && numSelected < rowCount}
+        checked={rowCount > 0 && numSelected === rowCount}
+        onChange={onSelectAllClick}
+        inputProps={{
+          'aria-label': 'select all rows',
+        }}
+      />
+    </TableCell>
+
+    {/* Dynamic headCells */}
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align={headCell.align || (headCell.numeric ? "left" : "right")}
+              padding={headCell.disablePadding ? "none" : "normal"}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                <b>{headCell.label}</b>
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+
+    // <TableHead>
+    //   <TableRow>
+    //     <TableCell padding="checkbox">
+    //       <Checkbox
+    //         color="primary"
+    //         indeterminate={numSelected > 0 && numSelected < rowCount}
+    //         checked={rowCount > 0 && numSelected === rowCount}
+    //         onChange={onSelectAllClick}
+    //         inputProps={{
+    //           'aria-label': 'select all desserts',
+    //         }}
+    //       />
+    //     </TableCell>
+    //     {headCells.map((headCell) => (
+    //       <TableCell
+    //         key={headCell.id}
+    //         align={headCell.numeric ? 'left' : 'right'}
+    //         // padding={headCell.disablePadding ? 'none' : 'normal'}
+    //         // padding="none"
+    //         sortDirection={orderBy === headCell.id ? order : false}
+    //       >
+    //         <TableSortLabel
+    //           active={orderBy === headCell.id}
+    //           direction={orderBy === headCell.id ? order : 'asc'}
+    //           onClick={createSortHandler(headCell.id)}
+    //         >
+    //           {headCell.label}
+    //           {orderBy === headCell.id ? (
+    //             <Box component="span" sx={visuallyHidden}>
+    //               {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+    //             </Box>
+    //           ) : null}
+    //         </TableSortLabel>
+    //       </TableCell>
+    //     ))}
+    //   </TableRow>
+    // </TableHead>
+  );
+}
+
+
 export default function RequestsTable() {
   const navigate = useNavigate();
   const [page, setPage] = useState(0);
@@ -98,6 +246,9 @@ export default function RequestsTable() {
 
   // ✅ Selection State
   const [selected, setSelected] = useState([]);
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState('calories');
+  const [dense, setDense] = React.useState(false);
 
   const fetchPage = async (page, limit) => {
     setLoading(true);
@@ -140,38 +291,125 @@ export default function RequestsTable() {
   };
 
   // ✅ Handle Individual Row Selection
-  const handleSelectRow = (id) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
-    );
+  const handleSelectRow = (isChecked,indiVidualId) => {
+    if(isChecked){
+      let array= [...selected];
+      array.push(indiVidualId);
+      setSelected([...array])
+    }else{
+       let array= [...selected];
+       let index = array.findIndex(x => x == indiVidualId);
+       array.splice(index, 1);
+       setSelected([...array]);
+    }
   };
+  console.log('selected array__',selected)
 
   const isSelected = (id) => selected.includes(id);
 
   const handleRedirect = (id)=>{
-    navigate(`/ticket/${id}`)
+    navigate(`/request/ticket/${id}`)
   }
 
+    const handleSelectAllClick = (event) => {
+       if (event.target.checked) {
+      const allIds = rows.map((row) => row.id);
+      setSelected(allIds);
+    } else {
+      setSelected([]);
+    }
+  };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+const visibleRows = React.useMemo(() => {
+  return rows.length > 0
+    ? [...rows].sort(getComparator(order, orderBy))
+    : [];
+}, [rows, order, orderBy]);
+
+
+  
+  console.log('visble rows__',visibleRows,rows)
   return (
   
     <StyledTableContainer component={Paper}>
+
       <HeaderBar>
         <FolderIcon />
         My Completed Requests
-        <span style={{ flex: 1 }} />
-        <Button variant="outlined" size="small">
-          <RefreshIcon />
-        </Button>
-        <Button variant="outlined" size="small">
-          <SettingsIcon />
-        </Button>
-          <Button variant="outlined" onClick={()=>{
-            setOpen(true)
-            // setChecked(true)
-          }}
-          size="small">
-          <FilterAltIcon />
-        </Button>
+         <span style={{ flex: 1 }} />
+            <TablePagination
+              component="div"
+              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              count={totalCount}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+              sx={{
+                ml: 2, // small margin to separate from buttons
+                "& .MuiTablePagination-toolbar": {
+                  padding: 0,
+                  minHeight: "40px",
+                },
+                "& .MuiTablePagination-displayedRows": {
+                  margin: 0,
+                },
+              }}
+            />
+
+             <IconButton
+              sx={{
+                border: "1px solid #e0e0e0",
+                borderRadius: "8px",
+                padding: "8px",
+                backgroundColor: "white",
+                "&:hover": {
+                  backgroundColor: "#f5f5f5",
+                },
+              }}
+              onClick={() => window.open("https://github.com", "_blank")}
+              >
+                <RefreshIcon sx={{ color: "#000000" }} />
+              </IconButton>
+
+              <IconButton
+                sx={{
+                  border: "1px solid #e0e0e0",
+                  borderRadius: "8px",
+                  padding: "8px",
+                  backgroundColor: "white",
+                  "&:hover": {
+                    backgroundColor: "#f5f5f5",
+                  },
+                }}
+                onClick={() => window.open("https://github.com", "_blank")}
+                >
+                  <SettingsIcon sx={{ color: "#000000" }} />
+                </IconButton>
+
+                 <IconButton
+                    sx={{
+                      border: "1px solid #e0e0e0",
+                      borderRadius: "8px",
+                      padding: "8px",
+                      backgroundColor: "white",
+                      "&:hover": {
+                        backgroundColor: "#f5f5f5",
+                      },
+                    }}
+                    onClick={()=>{setOpen(true)// setChecked(true)
+                    }}
+                >
+                  <FilterAltIcon sx={{ color: "#000000" }} />
+                </IconButton>
+          
       </HeaderBar>
 
       <Toolbar>
@@ -185,79 +423,80 @@ export default function RequestsTable() {
       </Toolbar>
 
       <Table aria-label="completed requests table" style={{ width: "100%" }}>
-        <TableBody>
-          {loading ? (
-            <TableRow>
-              <TableCell colSpan={5} align="center">
-                <CircularProgress />
-              </TableCell>
-            </TableRow>
-          ) : error ? (
-            <TableRow>
-              <TableCell colSpan={5} align="center" sx={{ color: "error.main" }}>
-                {error}
-              </TableCell>
-            </TableRow>
-          ) : rows.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={5} align="center">
-                <Typography>No data available</Typography>
-              </TableCell>
-            </TableRow>
-          ) : (
-            <>
-              {/* ✅ Table Header with Select All */}
-              <StyledHeaderRow>
-                <StyledHeaderCell padding="checkbox">
-                  <Checkbox
-                    checked={rows.length > 0 && selected.length === rows.length}
-                    indeterminate={selected.length > 0 && selected.length < rows.length}
-                    onChange={handleSelectAll}
-                  />
-                </StyledHeaderCell>
-                <StyledHeaderCell>ID</StyledHeaderCell>
-                <StyledHeaderCell>First Name</StyledHeaderCell>
-                <StyledHeaderCell>Last Name</StyledHeaderCell>
-              </StyledHeaderRow>
-
-              {/* ✅ Table Data with Row Checkboxes */}
-              {rows.map((row) => (
-                <StyledRow key={row.id} selected={isSelected(row.id)} onClick={() => handleRedirect(row.id)}>
-                  <StyledCell padding="checkbox">
-                    <Checkbox
-                      checked={isSelected(row.id)}
-                      onClick={(e) => e.stopPropagation()}   // Prevent row click
-                      onChange={() => handleSelectRow(row.id)}
-                    />
-                  </StyledCell>
-                  <StyledCell>
-                    <YellowDot />
-                    {row.id}
-                  </StyledCell>
-                  <StyledCell>{row.firstName}</StyledCell>
-                  <StyledCell>{row.lastName}</StyledCell>
-                </StyledRow>
-
-              ))}
-            </>
-          )}
-        </TableBody>
-
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={5}
-              count={totalCount}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
+            {/* ✅ Table Head */}
+            <EnhancedTableHead
+              sx={{background:'#e5e6e7'}}
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
             />
-          </TableRow>
-        </TableFooter>
-      </Table>
+
+            {/* ✅ Table Body */}
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    <CircularProgress />
+                  </TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow>
+                  <TableCell colSpan={5} align="center" sx={{ color: "error.main" }}>
+                    {error}
+                  </TableCell>
+                </TableRow>
+              ) : visibleRows.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} align="center">
+                    <Typography>No data available</Typography>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                visibleRows.map((row, index) => {
+                  const isItemSelected = selected.includes(row.id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
+
+                  return (
+                    <StyledRow
+                      key={row.id}
+                      hover
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      selected={isItemSelected}
+                      onClick={() => handleRedirect(row.id)}
+                    >
+                      <StyledCell>
+                        <Checkbox
+                          checked={isItemSelected}
+                          onClick={(e) => e.stopPropagation()} // prevent row redirect when clicking checkbox
+                          onChange={(e, isChecked) => handleSelectRow(isChecked, row.id)}
+                          inputProps={{ "aria-labelledby": labelId }}
+                        />
+
+                      </StyledCell>
+                      <StyledCell onClick={(e) =>{e.stopPropagation()}
+                      } fontSize="small" align="center"><IconButton><MailIcon /></IconButton></StyledCell>
+                      <StyledCell  onClick={(e) => e.stopPropagation()} fontSize="small" align="center"><IconButton><EditIcon /></IconButton></StyledCell>
+                      <StyledCell  onClick={(e) => e.stopPropagation()} fontSize="small" align="center"><IconButton><SummarizeIcon /></IconButton></StyledCell>
+
+                      {/* <StyledCell padding="checkbox"></StyledCell> */}
+                      <StyledCell component="th" id={labelId} scope="row">
+                        <YellowDot />
+                        {row.id}
+                      </StyledCell>
+                      <StyledCell>{row.firstName}</StyledCell>
+                      <StyledCell>{row.lastName}</StyledCell>
+                    </StyledRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+
       <FilterDialogue
         open={open}
         setOpen={setOpen}

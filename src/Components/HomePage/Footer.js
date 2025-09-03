@@ -7,6 +7,7 @@ import { IconButton, Paper } from "@mui/material";
 import {FooterRow,
 FooterItem,
 FooterLabel } from "../../styled_components/footer.styled"
+import Badge from '@mui/material/Badge';
 
 
 export default function Footer() {
@@ -28,8 +29,11 @@ export default function Footer() {
         </FooterItem>
 
         <FooterItem>
+          
           <IconButton>
-            <GroupsIcon sx={{ color: "#d94444" }} />
+            <Badge badgeContent={4} color="primary">
+             <GroupsIcon sx={{ color: "#d94444" }} />
+            </Badge>
           </IconButton>
           <FooterLabel>Groups</FooterLabel>
         </FooterItem>

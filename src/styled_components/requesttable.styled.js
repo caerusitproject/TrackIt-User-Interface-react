@@ -24,6 +24,7 @@ export const StyledTableContainer = styled(TableContainer)`
   border-radius: 6px;
   overflow: hidden;
   width: 100%;
+  min-height: 470px;   
 `;
 
 export const StyledHeaderRow = styled(TableRow)`

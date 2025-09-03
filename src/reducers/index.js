@@ -1,12 +1,11 @@
-// src/store.js
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import { userReducer } from './users.reducers';
+import { combineReducers } from "redux";
+import { userReducer } from "./users.reducers";
+import { loginReducer } from "./login.reducers";
 
+// combineReducers returns a single reducer function ✅
 const rootReducer = combineReducers({
   user: userReducer,
+  login: loginReducer,
 });
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
-
-export default store;
+export default rootReducer;

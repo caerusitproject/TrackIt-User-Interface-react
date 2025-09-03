@@ -13,13 +13,12 @@ const AccountDetails = lazy(() => import('../Components/HomePage/AccountDetails'
 
 
 export const routes = [
-  { path: '/', element: <LoginPage /> },
+  { path: '/login', element: <LoginPage /> },
   { path: '/register-user', element: <RegisterPage /> },
-  { path: '/request', element: <Request /> },
   { path: '/request', element: <Request /> },
   { path: '/account-details', element: <AccountDetails /> },
   // { path: '/solution', element: <EditForm /> },
-  { path: '/ticket/:id', element: <TicketDetails/> },
+  { path: '/request/ticket/:ticketId', element: <TicketDetails /> },
   { path: '/password_reset', element: <PasswordReset /> },
   { path: '/home', element: <Home /> },
   { path: '*', element: <NotFound /> },
