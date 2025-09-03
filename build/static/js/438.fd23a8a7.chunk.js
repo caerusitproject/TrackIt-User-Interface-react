@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkticketmanagementsystem=self.webpackChunkticketmanagementsystem||[]).push([[438],{8438:(e,t,n)=>{n.r(t),n.d(t,{default:()=>a});n(5043);var s=n(579);function a(){return(0,s.jsx)("div",{children:(0,s.jsx)("h1",{children:"404 Page Not Found"})})}}}]);
+//# sourceMappingURL=438.fd23a8a7.chunk.js.map
