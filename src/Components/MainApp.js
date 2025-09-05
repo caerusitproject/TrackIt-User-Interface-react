@@ -20,7 +20,7 @@ import TopNavbar from "./HomePage/TopNavbar";
 
 // Layout with Navbar + Footer
 function AppLayout() {
-   const [collapsed, setCollapsed] = React.useState(false);
+  const collapsed =useSelector((state)=>state.login.collapsed)
    const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
 
   // Watch for resize → update mobile/desktop mode
@@ -38,8 +38,6 @@ function AppLayout() {
       <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       {/* Top AppBar */}
       <TopNavbar
-       collapsed={collapsed}
-       setCollapsed={setCollapsed}
        isMobile={isMobile}
        setIsMobile={setIsMobile}
       />
@@ -52,8 +50,6 @@ function AppLayout() {
       <Box sx={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {/* Sidebar */}
         <SideNavbar
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
           isMobile={isMobile}
         />
 
@@ -66,7 +62,6 @@ function AppLayout() {
             <main style={{ flex: 1, padding: "20px", overflowY: "auto" }}>
               <Outlet />
             </main>
-
             <Footer />
           </Suspense>
         </Box>

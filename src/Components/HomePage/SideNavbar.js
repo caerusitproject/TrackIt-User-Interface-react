@@ -16,11 +16,12 @@ import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import EmojiObjectsIcon from "@mui/icons-material/EmojiObjects";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import FlagIcon from "@mui/icons-material/Flag";
-import MenuIcon from "@mui/icons-material/Menu";
+import {useSelector} from "react-redux";
 import { Tooltip } from "@mui/material";
 import { NavLink, useLocation } from "react-router-dom";
 
-export default function SideNavbar({collapsed,setCollapsed}) {
+export default function SideNavbar() {
+  const collapsed =useSelector((state)=>state.login.collapsed)
   const location = useLocation();
 
   return (

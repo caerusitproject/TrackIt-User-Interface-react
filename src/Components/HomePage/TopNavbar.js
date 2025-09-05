@@ -7,10 +7,11 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import InputBase from '@mui/material/InputBase';
 import { alpha,styled } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import imageLogo from "../../assets/TMS_logo1.png"
+import imageLogo from "../../assets/TMS_logo1.png";
+import * as actions from "../../actions";
 import MicrosoftIcon from '@mui/icons-material/Microsoft';
 
 
@@ -56,7 +57,8 @@ import MicrosoftIcon from '@mui/icons-material/Microsoft';
   justifyContent: 'center',
 }));
 
-export default function TopNavbar({isMobile,setIsMobile,collapsed,setCollapsed}) {
+export default function TopNavbar({isMobile,setIsMobile}) {
+  const collapsed =useSelector((state)=>state.login.collapsed)
     const dispatch=useDispatch();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -91,7 +93,7 @@ export default function TopNavbar({isMobile,setIsMobile,collapsed,setCollapsed})
         <Toolbar sx={{ justifyContent: "space-between" }}>
             <div style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                 <IconButton
-                    onClick={() => setCollapsed(!collapsed)}
+                    onClick={() => dispatch(actions.openCollapsed(collapsed))}
                     sx={{ color: "white" }}
                 >
                 {collapsed ? <MenuIcon /> : <HighlightOffIcon/> } 
